@@ -361,6 +361,7 @@ public class Coordinator {
     log.info("Issuing milestone: " + state.latestMilestoneIndex);
     log.info("Trunk: " + trunk + " Branch: " + branch);
     log.info("testhogehoge");
+    log.info("testhogehoge");
 
     List<Transaction> latestMilestoneTransactions = db.createMilestone(trunk, branch, state.latestMilestoneIndex, config.MWM);
     state.latestMilestoneTransactions = latestMilestoneTransactions.stream().map(Transaction::toTrytes).collect(Collectors.toList());
