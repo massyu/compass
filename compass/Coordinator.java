@@ -89,11 +89,12 @@ public class Coordinator {
     }).collect(Collectors.toList());
   }
 
+  //変更箇所 state.latestMilestoneIndex→434525
   private static CoordinatorState loadState(String path) throws IOException, ClassNotFoundException {
     CoordinatorState state;
     try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
       state = (CoordinatorState) ois.readObject();
-      log.info("loaded index {}", state.latestMilestoneIndex);
+      log.info("loaded index {}", 434525);
     }
     return state;
   }
