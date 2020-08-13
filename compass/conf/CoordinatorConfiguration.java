@@ -66,7 +66,7 @@ public class CoordinatorConfiguration extends BaseConfiguration {
   public int propagationRetriesThreshold = 5;
 
   @Parameter(names = "-allowDifferentCooAddress", description = "Don't fail on different Coordinator Addresses")
-  public boolean allowDifferentCooAddress = false;
+  public boolean allowDifferentCooAddress = true;
 
   @Parameter(names = "-statePath", description = "Path to compass state file.")
   public String statePath = "compass.state";
