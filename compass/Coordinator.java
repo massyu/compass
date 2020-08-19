@@ -94,7 +94,7 @@ public class Coordinator {
     CoordinatorState state;
     try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
       state = (CoordinatorState) ois.readObject();
-      log.info("loaded index {}", 434525);
+      log.info("loaded index {}", state.latestMilestoneIndex);
     }
     return state;
   }
