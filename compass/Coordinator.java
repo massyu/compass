@@ -51,7 +51,7 @@ import org.iota.jota.dto.response.GetTransactionsToApproveResponse;
 import org.iota.jota.error.ArgumentException;
 import org.iota.jota.model.Transaction;
 
-import org.iota.compass.network.NeighborRouter; //変更箇所
+import org.iota.compass.NeighborRouter; //変更箇所
 
 public class Coordinator {
   public final NeighborRouter neighborRouter; // 変更箇所
