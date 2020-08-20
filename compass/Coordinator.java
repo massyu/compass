@@ -51,7 +51,11 @@ import org.iota.jota.dto.response.GetTransactionsToApproveResponse;
 import org.iota.jota.error.ArgumentException;
 import org.iota.jota.model.Transaction;
 
+import com.iota.compass.network.NeighborRouter; //変更箇所
+
 public class Coordinator {
+  public final NeighborRouter neighborRouter; // 変更箇所
+
   private static final Logger log = LoggerFactory.getLogger(Coordinator.class);
   private final MilestoneSource db;
   private final IotaAPI api;
@@ -110,6 +114,7 @@ public class Coordinator {
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       log.info("Shutting down Compass after next milestone...");
       this.shutdown = true;
+      neighborRouter.shutdown(); //変更箇所
       try {
         this.workerThread.join();
       } catch (InterruptedException e) {
@@ -153,6 +158,9 @@ public class Coordinator {
         throw new RuntimeException(e);
       }
     }
+
+    //変更箇所
+    neighborRouter.start();
 
     Coordinator coo = new Coordinator(config, state, SignatureSourceHelper.signatureSourceFromArgs(config.signatureSource, args));
     coo.setup();
