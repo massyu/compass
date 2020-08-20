@@ -1,4 +1,4 @@
-package com.iota.compass.network;
+package org.iota.compass.network;
 
 import java.util.List;
 import java.util.Map;
