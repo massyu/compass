@@ -164,7 +164,7 @@ public class Coordinator {
           
           //接続待機
           //sc = channel.accept();
-          log("動いてる１");
+          log.info("動いてる１");
 
           serverSock = new ServerSocket(14270);          
           clientSock = serverSock.accept();
@@ -174,16 +174,16 @@ public class Coordinator {
 			    sok_is = new InputStreamReader(sok_in);
 			    sok_br = new BufferedReader(sok_is);
 
-          log("動いてる２");
+          log.info("動いてる２");
           os = clientSock.getOutputStream();
 
           while(true){ 
-            log("動いてる3");
+            log.info("動いてる3");
             String receive =  sok_br.readLine();//受信データ取得
-            log(receive);
+            log.info(receive);
             receive =  sok_br.readLine();//受信データ取得
-            log(receive);
-            log("送信文字列>>");
+            log.info(receive);
+            log.info("送信文字列>>");
             String send = br.readLine();	//キー1行入力
             os.write(send.getBytes());//送信
             os.write(crlf);
