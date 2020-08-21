@@ -136,7 +136,7 @@ public class Coordinator {
   }
 
   //変更箇所
-  private static openConnect() {
+  private void openConnect() {
       log.info("ポート解放&受信待機");
 
       // run selector loop
@@ -149,7 +149,7 @@ public class Coordinator {
           channel.socket().bind(new InetSocketAddress(10007));
           
           //接続待機
-          SocketChannel sc = channel.accept();
+          SocketChannnel sc = channel.accept();
           
           //バッファデータ(バイト配列)を作成（今回は4バイトのint型のみをテスト）
           ByteBuffer bb = ByteBuffer.allocate(4);
@@ -208,7 +208,7 @@ public class Coordinator {
     }
 
     //変更箇所
-    openConnect();
+    coo.openConnect();
 
     Coordinator coo = new Coordinator(config, state, SignatureSourceHelper.signatureSourceFromArgs(config.signatureSource, args));
     coo.setup();
