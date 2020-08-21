@@ -51,17 +51,19 @@ import org.iota.jota.dto.response.GetTransactionsToApproveResponse;
 import org.iota.jota.error.ArgumentException;
 import org.iota.jota.model.Transaction;
 
+//変更箇所
+import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.ServerSocketChannel;
-import org.iota.compass.NeighborRouter; //変更箇所
+//import org.iota.compass.NeighborRouter; //変更箇所
 
 
 public class Coordinator {
-  public final NeighborRouter neighborRouter; // 変更箇所
+  //public final NeighborRouter neighborRouter; // 変更箇所
 
   private static final Logger log = LoggerFactory.getLogger(Coordinator.class);
   private final MilestoneSource db;
@@ -71,9 +73,12 @@ public class Coordinator {
   private List<IotaAPI> validatorAPIs;
   private Thread workerThread;
   private boolean shutdown;
-
+  
   private long milestoneTick;
   private int depth;
+
+  private ServerSocketChannel channel; //変更箇所
+
 
   private Coordinator(CoordinatorConfiguration config, CoordinatorState state, SignatureSource signatureSource) throws IOException {
     this.config = config;
@@ -121,7 +126,6 @@ public class Coordinator {
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       log.info("Shutting down Compass after next milestone...");
       this.shutdown = true;
-      neighborRouter.shutdown(); //変更箇所
       try {
         this.workerThread.join();
       } catch (InterruptedException e) {
@@ -130,6 +134,43 @@ public class Coordinator {
       }
     }, "Shutdown Hook"));
   }
+
+  //変更箇所
+  private void openConnect() {
+      log.info("ポート解放&受信待機");
+
+      // run selector loop
+      try {
+          //selector = Selector.open();
+
+          channel = ServerSocketChannel.open();
+      
+          //受信ポートを指定
+          channel.socket().bind(new InetSocketAddress(10007));
+          
+          //接続待機
+          SocketChannel sc = channel.accept();
+          
+          //バッファデータ(バイト配列)を作成（今回は4バイトのint型のみをテスト）
+          ByteBuffer bb = ByteBuffer.allocate(4);
+          
+          //バッファ(バイト配列)に受信データを読み込み
+          sc.read(bb);
+          
+          //ソケットチャンネルクローズ
+          sc.close();
+          
+          //サーバーチャンネルクローズ
+          channel.close();
+          
+          //intデータを受信データの0バイト目から読み込み
+          System.out.println("受信:"+bb.getInt(0));
+
+      }catch(IOException e){
+          e.printStackTrace();
+      }
+  }
+
 
   public static void main(String[] args) throws Exception {
 
@@ -167,7 +208,7 @@ public class Coordinator {
     }
 
     //変更箇所
-    neighborRouter.start();
+    openConnect();
 
     Coordinator coo = new Coordinator(config, state, SignatureSourceHelper.signatureSourceFromArgs(config.signatureSource, args));
     coo.setup();
