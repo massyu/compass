@@ -152,7 +152,7 @@ public class Coordinator {
   //変更箇所
   private void openConnect() {
       log.info("ポート解放&受信待機");
-
+      byte crlf [] = {13,10};//キャリッジリターン(CR),改行(LF)の並び で、送信時の区切り用
       // run selector loop
       try {
           //selector = Selector.open();
