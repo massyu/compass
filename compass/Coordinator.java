@@ -78,6 +78,8 @@ public class Coordinator {
   private int depth;
 
   private ServerSocketChannel channel; //変更箇所
+  private SocketChannnel sc;
+  private ByteBuffer bb;
 
 
   private Coordinator(CoordinatorConfiguration config, CoordinatorState state, SignatureSource signatureSource) throws IOException {
@@ -149,10 +151,10 @@ public class Coordinator {
           channel.socket().bind(new InetSocketAddress(10007));
           
           //接続待機
-          SocketChannnel sc = channel.accept();
+          sc = channel.accept();
           
           //バッファデータ(バイト配列)を作成（今回は4バイトのint型のみをテスト）
-          ByteBuffer bb = ByteBuffer.allocate(4);
+          bb = ByteBuffer.allocate(4);
           
           //バッファ(バイト配列)に受信データを読み込み
           sc.read(bb);
