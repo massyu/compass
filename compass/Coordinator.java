@@ -207,7 +207,6 @@ public class Coordinator {
       }catch(IOException e){
           e.printStackTrace();
       }
-      log("  Enterキーで終了");
   		try{System.in.read();}catch(Exception e){}
   }
 
