@@ -78,9 +78,8 @@ public class Coordinator {
   private int depth;
 
   private ServerSocketChannel channel; //変更箇所
-  private SocketChannnel sc;
+  private SocketChannel sc;
   private ByteBuffer bb;
-
 
   private Coordinator(CoordinatorConfiguration config, CoordinatorState state, SignatureSource signatureSource) throws IOException {
     this.config = config;
