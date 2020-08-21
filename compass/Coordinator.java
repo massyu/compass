@@ -51,6 +51,12 @@ import org.iota.jota.dto.response.GetTransactionsToApproveResponse;
 import org.iota.jota.error.ArgumentException;
 import org.iota.jota.model.Transaction;
 
+import java.util.Map;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.ServerSocketChannel;
 import org.iota.compass.NeighborRouter; //変更箇所
 
 
