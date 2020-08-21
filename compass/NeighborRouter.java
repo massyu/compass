@@ -55,8 +55,10 @@ public class NeighborRouter {
 		}
     }
 
+    /*
     public void shutdown() {
         shutdown.set(true);
         executor.shutdownNow();
     }
+    */
 }
