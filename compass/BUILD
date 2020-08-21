@@ -65,3 +65,23 @@ java_binary(
         "@org_slf4j_slf4j_api//jar",
     ],
 )
+
+java_binary(
+    name = "neighbor_router",
+    srcs = ["NeighborRouter.java"],
+    classpath_resources = ["simplelogger.properties"],
+    main_class = "org.iota.compass.NeighborRouter",
+    visibility = ["//visibility:public"],
+    runtime_deps = COORDINATOR_RUNTIME_DEPS,
+    deps = [
+        "//compass/conf",
+        "//compass/exceptions",
+        "//compass/milestone",
+        "//compass/sign:common",
+        "//compass/sign:helper",
+        "//compass/sign:remote",
+        "@com_beust_jcommander//jar",
+        "@org_iota_jota//jar",
+        "@org_slf4j_slf4j_api//jar",
+    ],
+)
