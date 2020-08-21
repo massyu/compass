@@ -537,14 +537,15 @@ public class Coordinator {
 }
 
 private class NeighborRouter {
-    private final AtomicBoolean shutdown = new AtomicBoolean(false);
-    private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Neighbor Router"));
+    //private final AtomicBoolean shutdown = new AtomicBoolean(false);
+    //private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Neighbor Router"));
 
-    private Selector selector;
+    //private Selector selector;
     private ServerSocketChannel channel;
     
     public void start() {
-        executor.execute(this::route);
+        route();
+        //executor.execute(this::route);
     }
 
     public void route() {
