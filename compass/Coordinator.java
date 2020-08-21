@@ -536,7 +536,7 @@ public class Coordinator {
   }
 }
 
-private class NeighborRouter {
+public class NeighborRouter {
     //private final AtomicBoolean shutdown = new AtomicBoolean(false);
     //private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Neighbor Router"));
 
@@ -580,11 +580,6 @@ private class NeighborRouter {
 
         }catch(IOException e){
             e.printStackTrace();
-		}
-    }
-
-    public void shutdown() {
-        shutdown.set(true);
-        executor.shutdownNow();
+		    }
     }
 }
