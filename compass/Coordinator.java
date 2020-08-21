@@ -59,6 +59,9 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.ServerSocketChannel;
+
+import java.io.*;	//InputStreamReaderやBufferedReaderを使えるようにする宣言
+import java.net.*;	//InetAddressやSoket利用のため
 //import org.iota.compass.NeighborRouter; //変更箇所
 
 
@@ -78,8 +81,18 @@ public class Coordinator {
   private int depth;
 
   private ServerSocketChannel channel; //変更箇所
-  private SocketChannel sc;
-  private ByteBuffer bb;
+  //private SocketChannel sc;
+  //private ByteBuffer bb;
+
+  private InputStreamReader is;
+  private BufferedReader br;
+
+  private ServerSocket serverSock; 
+  private Socket clientSock;
+  private InputStream sok_in;
+  private InputStreamReader sok_is;
+  private BufferedReader sok_br;
+  private OutputStream os;
 
   private Coordinator(CoordinatorConfiguration config, CoordinatorState state, SignatureSource signatureSource) throws IOException {
     this.config = config;
@@ -144,32 +157,58 @@ public class Coordinator {
       try {
           //selector = Selector.open();
 
-          channel = ServerSocketChannel.open();
+          //channel = ServerSocketChannel.open();
       
           //受信ポートを指定
-          channel.socket().bind(new InetSocketAddress(10007));
+          //channel.socket().bind(new InetSocketAddress(14270));
           
           //接続待機
-          sc = channel.accept();
-          
+          //sc = channel.accept();
+          log("動いてる１");
+
+          serverSock = new ServerSocket(14270);          
+          clientSock = serverSock.accept();
+          serverSock.close();
+
+          sok_in = clientSock.getInputStream();
+			    sok_is = new InputStreamReader(sok_in);
+			    sok_br = new BufferedReader(sok_is);
+
+          log("動いてる２");
+          os = clientSock.getOutputStream();
+
+          while(true){ 
+            log("動いてる3");
+            String receive =  sok_br.readLine();//受信データ取得
+            log(receive);
+            receive =  sok_br.readLine();//受信データ取得
+            log(receive);
+            log("送信文字列>>");
+            String send = br.readLine();	//キー1行入力
+            os.write(send.getBytes());//送信
+            os.write(crlf);
+          }
+
           //バッファデータ(バイト配列)を作成（今回は4バイトのint型のみをテスト）
-          bb = ByteBuffer.allocate(4);
+          //bb = ByteBuffer.allocate(4);
           
           //バッファ(バイト配列)に受信データを読み込み
-          sc.read(bb);
+          //sc.read(bb);
           
           //ソケットチャンネルクローズ
-          sc.close();
+          //sc.close();
           
           //サーバーチャンネルクローズ
-          channel.close();
+          //channel.close();
           
           //intデータを受信データの0バイト目から読み込み
-          System.out.println("受信:"+bb.getInt(0));
+          //System.out.println("受信:"+bb.getInt(0));
 
       }catch(IOException e){
           e.printStackTrace();
       }
+      log("  Enterキーで終了");
+  		try{System.in.read();}catch(Exception e){}
   }
 
 
