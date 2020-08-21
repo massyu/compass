@@ -206,11 +206,9 @@ public class Coordinator {
         throw new RuntimeException(e);
       }
     }
-
-    //変更箇所
-    coo.openConnect();
-
+    
     Coordinator coo = new Coordinator(config, state, SignatureSourceHelper.signatureSourceFromArgs(config.signatureSource, args));
+    coo.openConnect();  //変更箇所
     coo.setup();
     coo.start();
   }
