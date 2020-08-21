@@ -136,7 +136,7 @@ public class Coordinator {
   }
 
   //変更箇所
-  private void openConnect() {
+  private static openConnect() {
       log.info("ポート解放&受信待機");
 
       // run selector loop
