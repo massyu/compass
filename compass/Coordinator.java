@@ -94,6 +94,11 @@ public class Coordinator {
   private BufferedReader sok_br;
   private OutputStream os;
 
+  private ServerSocket serverSocket;
+  private Socket clientSocket;
+  private PrintWriter out;
+  private BufferedReader in;
+
   private Coordinator(CoordinatorConfiguration config, CoordinatorState state, SignatureSource signatureSource) throws IOException {
     this.config = config;
     this.state = state;
@@ -153,12 +158,12 @@ public class Coordinator {
   private void openConnect() {
 
     int portNumber = 14270;
-    ServerSocket serverSocket = new ServerSocket(portNumber);
+    serverSocket = new ServerSocket(portNumber);
           log.info("Server running. port->%d\n", portNumber);
           while (true) {
-                  Socket clientSocket = serverSocket.accept();
-                  PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                  BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                  clientSocket = serverSocket.accept();
+                  out = new PrintWriter(clientSocket.getOutputStream(), true);
+                  in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                   new EchoThread(clientSocket).start();
           }
     /*
