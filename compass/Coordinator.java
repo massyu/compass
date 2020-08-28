@@ -163,12 +163,12 @@ public class Coordinator {
               BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
               ) {
               new EchoThread(clientSocket).start();
-          } catch (InterruptedException e){
-            e.printStackTrace();
+          } catch (Exception e){
+              log.info("%d\n", e);
           }
       }
-    } catch (InterruptedException e){
-      e.printStackTrace();
+    } catch (Exception e){
+      log.info("%d\n", e);
     }
     /*
       log.info("ポート解放&受信待機");
