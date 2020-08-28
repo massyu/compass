@@ -25,7 +25,7 @@ public class NeighborRouter {
 
         // run selector loop
         try {
-            selector = Selector.open();
+            //selector = Selector.open();
 
             channel = ServerSocketChannel.open();
         

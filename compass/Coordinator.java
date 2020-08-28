@@ -151,6 +151,31 @@ public class Coordinator {
 
   //変更箇所
   private void openConnect() {
+      Thread thread = new Thread(() -> {
+          try {
+              new EchoClient().connect();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      });
+      thread.start();
+  }
+
+  private class EchoClient {
+
+    private void connect() throws UnknownHostException, IOException {
+        String hostName = "localhost";
+        int portNumber = 8888;
+
+        try (
+            Socket echoSocket = new Socket(hostName, portNumber);
+        ) {
+            log.info("[%s] :connected!\n", Thread.currentThread().getName());
+        }
+    }
+  }
+
+    /*
       log.info("ポート解放&受信待機");
       byte crlf [] = {13,10};//キャリッジリターン(CR),改行(LF)の並び で、送信時の区切り用
       // run selector loop
@@ -208,7 +233,8 @@ public class Coordinator {
           e.printStackTrace();
       }
   		try{System.in.read();}catch(Exception e){}
-  }
+      */
+
 
 
   public static void main(String[] args) throws Exception {
