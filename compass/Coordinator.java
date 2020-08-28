@@ -151,30 +151,21 @@ public class Coordinator {
 
   //変更箇所
   private void openConnect() {
-      Thread thread = new Thread(() -> {
-          try {
-              new EchoClient().connect();
-          } catch (IOException e) {
-              e.printStackTrace();
+
+    int portNumber = 14270;
+      try (ServerSocket serverSocket = new ServerSocket(portNumber);) {
+          log.info("Server running. port->%d\n", portNumber);
+          while (true) {
+              try (
+                  Socket clientSocket = serverSocket.accept();
+                  PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                  BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                  ) {
+                  new EchoThread(clientSocket).start();
+              }
           }
-      });
-      thread.start();
-  }
-
-  private class EchoClient {
-
-    private void connect() throws UnknownHostException, IOException {
-        String hostName = "localhost";
-        int portNumber = 8888;
-
-        try (
-            Socket echoSocket = new Socket(hostName, portNumber);
-        ) {
-            log.info("[%s] :connected!\n", Thread.currentThread().getName());
-        }
+      }
     }
-  }
-
     /*
       log.info("ポート解放&受信待機");
       byte crlf [] = {13,10};//キャリッジリターン(CR),改行(LF)の並び で、送信時の区切り用
@@ -234,7 +225,27 @@ public class Coordinator {
       }
   		try{System.in.read();}catch(Exception e){}
       */
+  }
 
+  class EchoThread extends Thread {
+
+    private Socket socket;
+
+    public EchoThread(Socket socket) {
+        this.socket = socket;
+        System.out.printf("%s [%s] :Accepted!\n", new Date(), Thread.currentThread().getName());
+    }
+
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.printf("%s [%s] :Process finished.\n", new Date(), Thread.currentThread().getName());
+    }
+}
 
 
   public static void main(String[] args) throws Exception {
