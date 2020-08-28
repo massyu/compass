@@ -154,17 +154,13 @@ public class Coordinator {
 
     int portNumber = 14270;
     ServerSocket serverSocket = new ServerSocket(portNumber);
-      try {
           log.info("Server running. port->%d\n", portNumber);
           while (true) {
-              try {
                   Socket clientSocket = serverSocket.accept();
                   PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                   BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                   new EchoThread(clientSocket).start();
-              }
           }
-      }
     /*
       log.info("ポート解放&受信待機");
       byte crlf [] = {13,10};//キャリッジリターン(CR),改行(LF)の並び で、送信時の区切り用
@@ -244,7 +240,7 @@ public class Coordinator {
         }
         log.info("%s [%s] :Process finished.\n", "1010", Thread.currentThread().getName());
     }
-}
+  }
 
 
   public static void main(String[] args) throws Exception {
