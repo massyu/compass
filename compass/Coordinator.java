@@ -232,7 +232,7 @@ public class Coordinator {
 
     public EchoThread(Socket socket) {
         this.socket = socket;
-        System.out.printf("%s [%s] :Accepted!\n", new Date(), Thread.currentThread().getName());
+        log.info("%s [%s] :Accepted!\n", "1010", Thread.currentThread().getName());
     }
 
     @Override
@@ -242,7 +242,7 @@ public class Coordinator {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.printf("%s [%s] :Process finished.\n", new Date(), Thread.currentThread().getName());
+        log.info("%s [%s] :Process finished.\n", "1010", Thread.currentThread().getName());
     }
 }
 
