@@ -94,11 +94,6 @@ public class Coordinator {
   private BufferedReader sok_br;
   private OutputStream os;
 
-  private ServerSocket serverSocket;
-  private Socket clientSocket;
-  private PrintWriter out;
-  private BufferedReader in;
-
   private Coordinator(CoordinatorConfiguration config, CoordinatorState state, SignatureSource signatureSource) throws IOException {
     this.config = config;
     this.state = state;
@@ -158,14 +153,23 @@ public class Coordinator {
   private void openConnect() {
 
     int portNumber = 14270;
-    serverSocket = new ServerSocket(portNumber);
-          log.info("Server running. port->%d\n", portNumber);
-          while (true) {
-                  clientSocket = serverSocket.accept();
-                  out = new PrintWriter(clientSocket.getOutputStream(), true);
-                  in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                  new EchoThread(clientSocket).start();
+
+    try (ServerSocket serverSocket = new ServerSocket(portNumber);) {
+      System.out.printf("Server running. port->%d\n", portNumber);
+      while (true) {
+          try (
+              Socket clientSocket = serverSocket.accept();
+              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+              BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+              ) {
+              new EchoThread(clientSocket).start();
+          } catch (InterruptedException e){
+            e.printStackTrace();
           }
+      }
+    } catch (InterruptedException e){
+      e.printStackTrace();
+    }
     /*
       log.info("ポート解放&受信待機");
       byte crlf [] = {13,10};//キャリッジリターン(CR),改行(LF)の並び で、送信時の区切り用
@@ -245,7 +249,7 @@ public class Coordinator {
         }
         log.info("%s [%s] :Process finished.\n", "1010", Thread.currentThread().getName());
     }
-  }
+}
 
 
   public static void main(String[] args) throws Exception {
