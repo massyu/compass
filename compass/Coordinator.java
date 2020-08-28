@@ -153,14 +153,14 @@ public class Coordinator {
   private void openConnect() {
 
     int portNumber = 14270;
-      try (ServerSocket serverSocket = new ServerSocket(portNumber);) {
+    ServerSocket serverSocket = new ServerSocket(portNumber);
+      try {
           log.info("Server running. port->%d\n", portNumber);
           while (true) {
-              try (
+              try {
                   Socket clientSocket = serverSocket.accept();
                   PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                   BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                  ) {
                   new EchoThread(clientSocket).start();
               }
           }
