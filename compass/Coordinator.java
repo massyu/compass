@@ -164,11 +164,11 @@ public class Coordinator {
               ) {
               new EchoThread(clientSocket).start();
           } catch (Exception e){
-              log.info("%d\n", e);
+              System.out.printf("%d\n", e);
           }
       }
     } catch (Exception e){
-      log.info("%d\n", e);
+      System.out.printf("%d\n", e);
     }
     /*
       log.info("ポート解放&受信待機");
