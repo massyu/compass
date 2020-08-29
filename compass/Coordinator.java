@@ -63,6 +63,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.io.*;	//InputStreamReaderやBufferedReaderを使えるようにする宣言
 import java.net.*;	//InetAddressやSoket利用のため
 //import org.iota.compass.NeighborRouter; //変更箇所
+import java.nio.charset.Charset;
 
 
 public class Coordinator {
