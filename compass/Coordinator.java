@@ -152,11 +152,57 @@ public class Coordinator {
   //変更箇所
   private void openConnect() {
 
+    int ECHO_PORT = 14270;
+    ServerSocketChannel serverChannel = null;
+    try {
+        serverChannel = ServerSocketChannel.open();
+        serverChannel.socket().bind(new InetSocketAddress(ECHO_PORT));
+        System.out.println("ChannelEchoServerが起動しました(port=" + serverChannel.socket().getLocalPort() + ")");
+        while (true) {
+            SocketChannel channel = serverChannel.accept();
+            System.out.println(channel.socket().getRemoteSocketAddress() + ":[接続されました]");
+            new Thread(new ChannelEchoThread(channel)).start();
+        }
+    } catch (IOException e) {
+        //e.printStackTrace();
+    } finally {
+        if (serverChannel != null && serverChannel.isOpen()) {
+            try {
+                System.out.println("ChannelEchoServerを停止します。");
+                serverChannel.close();
+            } catch (IOException e) {}
+        }
+    }
+/*
     int portNumber = 14270;
+    ServerSocket sSocket = null;
+  	Socket socket = null;
+	  BufferedReader reader = null;
+	  PrintWriter writer = null;
+
+    Thread thread = new Thread(() -> {
+        try {
+              sSocket = new ServerSocket();
+              sSocket.bind(new InetSocketAddress("192.168.1.72",14270));
+              System.out.println("クライアントからの入力待ち状態");
+              socket = sSocket.accept();
+              reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+              writer = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    });
+    thread.start();
 
     try (ServerSocket serverSocket = new ServerSocket(portNumber);) {
-      System.out.printf("Server running. port->%d\n", portNumber);
-      while (true) {
+      sSocket = new ServerSocket();
+  		sSocket.bind(new InetSocketAddress("192.168.1.72",14270));
+      System.out.println("クライアントからの入力待ち状態");
+      socket = sSocket.accept();
+  		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      writer = new PrintWriter(socket.getOutputStream(), true);
+
+      //while (true) {
           try (
               Socket clientSocket = serverSocket.accept();
               PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -166,10 +212,12 @@ public class Coordinator {
           } catch (Exception e){
               System.out.printf("%d\n", e);
           }
-      }
+      //}
     } catch (Exception e){
       System.out.printf("%d\n", e);
     }
+*/
+
     /*
       log.info("ポート解放&受信待機");
       byte crlf [] = {13,10};//キャリッジリターン(CR),改行(LF)の並び で、送信時の区切り用
@@ -231,6 +279,46 @@ public class Coordinator {
       */
   }
 
+  class ChannelEchoThread implements Runnable {
+  
+      private static final int BUF_SIZE = 1000;
+      SocketChannel channel = null;
+  
+      public ChannelEchoThread(SocketChannel channel) {
+          this.channel = channel;
+      }
+  
+      public void run() {
+          ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+          Charset charset = Charset.forName("UTF-8");
+          String remoteAddress = channel.socket()
+                  .getRemoteSocketAddress()
+                  .toString();
+          try {
+              if (channel.read(buf) < 0) {
+                  return;
+              }
+              buf.flip();
+              String input = charset.decode(buf).toString();
+              System.out.print(remoteAddress + ":" + input);
+              buf.flip();
+              channel.write(buf);
+          } catch (IOException e) {
+              e.printStackTrace();
+              return;
+          } finally {
+              System.out.println(remoteAddress + ":[切断しました]");
+              if (channel != null && channel.isOpen()) {
+                  try {
+                      channel.close();
+                  } catch (IOException e) {}
+              }
+          }
+      }
+  
+  }
+
+/*
   class EchoThread extends Thread {
 
     private Socket socket;
@@ -249,7 +337,8 @@ public class Coordinator {
         }
         log.info("%s [%s] :Process finished.\n", "1010", Thread.currentThread().getName());
     }
-}
+  }
+  */
 
 
   public static void main(String[] args) throws Exception {
