@@ -290,19 +290,28 @@ public class Coordinator {
       }
   
       public void run() {
+          System.out.println("run1");
           ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
+          System.out.println("run2");
           Charset charset = Charset.forName("UTF-8");
           String remoteAddress = channel.socket()
                   .getRemoteSocketAddress()
                   .toString();
+          System.out.println("run3");
           try {
+              System.out.println("run4");
               if (channel.read(buf) < 0) {
+                  System.out.println("run6"); 
                   return;
               }
+              System.out.println("run5"); 
               buf.flip();
+              System.out.println("run7"); 
               String input = charset.decode(buf).toString();
+              System.out.println("run8"); 
               System.out.print(remoteAddress + ":" + input);
               buf.flip();
+              System.out.println("run9"); 
               channel.write(buf);
           } catch (IOException e) {
               e.printStackTrace();
