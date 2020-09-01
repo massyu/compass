@@ -296,16 +296,17 @@ public class Coordinator {
                   .getRemoteSocketAddress()
                   .toString();
           try {
+              System.out.println(String.valueOf(channel.read(buf))); 
               if (channel.read(buf) < 0) {
                   System.out.println("run6"); 
                   return;
               }
               System.out.println("run5"); 
-              // buf.flip();
+              buf.flip();
               System.out.println("run7"); 
               String input = charset.decode(buf).toString();
               System.out.println("run8"); 
-              // buf.flip();
+              buf.flip();
               System.out.println("run9"); 
               channel.write(buf);
           } catch (IOException e) {
