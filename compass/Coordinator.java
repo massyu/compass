@@ -174,110 +174,6 @@ public class Coordinator {
             } catch (IOException e) {}
         }
     }
-/*
-    int portNumber = 14270;
-    ServerSocket sSocket = null;
-  	Socket socket = null;
-	  BufferedReader reader = null;
-	  PrintWriter writer = null;
-
-    Thread thread = new Thread(() -> {
-        try {
-              sSocket = new ServerSocket();
-              sSocket.bind(new InetSocketAddress("192.168.1.72",14270));
-              System.out.println("クライアントからの入力待ち状態");
-              socket = sSocket.accept();
-              reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-              writer = new PrintWriter(socket.getOutputStream(), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    });
-    thread.start();
-
-    try (ServerSocket serverSocket = new ServerSocket(portNumber);) {
-      sSocket = new ServerSocket();
-  		sSocket.bind(new InetSocketAddress("192.168.1.72",14270));
-      System.out.println("クライアントからの入力待ち状態");
-      socket = sSocket.accept();
-  		reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      writer = new PrintWriter(socket.getOutputStream(), true);
-
-      //while (true) {
-          try (
-              Socket clientSocket = serverSocket.accept();
-              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-              BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-              ) {
-              new EchoThread(clientSocket).start();
-          } catch (Exception e){
-              System.out.printf("%d\n", e);
-          }
-      //}
-    } catch (Exception e){
-      System.out.printf("%d\n", e);
-    }
-*/
-
-    /*
-      log.info("ポート解放&受信待機");
-      byte crlf [] = {13,10};//キャリッジリターン(CR),改行(LF)の並び で、送信時の区切り用
-      // run selector loop
-      try {
-          //selector = Selector.open();
-
-          //channel = ServerSocketChannel.open();
-      
-          //受信ポートを指定
-          //channel.socket().bind(new InetSocketAddress(14270));
-          
-          //接続待機
-          //sc = channel.accept();
-          log.info("動いてる１");
-
-          serverSock = new ServerSocket(14270);          
-          clientSock = serverSock.accept();
-          serverSock.close();
-
-          sok_in = clientSock.getInputStream();
-			    sok_is = new InputStreamReader(sok_in);
-			    sok_br = new BufferedReader(sok_is);
-
-          log.info("動いてる２");
-          os = clientSock.getOutputStream();
-
-          while(true){ 
-            log.info("動いてる3");
-            String receive =  sok_br.readLine();//受信データ取得
-            log.info(receive);
-            receive =  sok_br.readLine();//受信データ取得
-            log.info(receive);
-            log.info("送信文字列>>");
-            String send = br.readLine();	//キー1行入力
-            os.write(send.getBytes());//送信
-            os.write(crlf);
-          }
-
-          //バッファデータ(バイト配列)を作成（今回は4バイトのint型のみをテスト）
-          //bb = ByteBuffer.allocate(4);
-          
-          //バッファ(バイト配列)に受信データを読み込み
-          //sc.read(bb);
-          
-          //ソケットチャンネルクローズ
-          //sc.close();
-          
-          //サーバーチャンネルクローズ
-          //channel.close();
-          
-          //intデータを受信データの0バイト目から読み込み
-          //System.out.println("受信:"+bb.getInt(0));
-
-      }catch(IOException e){
-          e.printStackTrace();
-      }
-  		try{System.in.read();}catch(Exception e){}
-      */
   }
 
   class ChannelEchoThread implements Runnable {
@@ -298,16 +194,13 @@ public class Coordinator {
           try {
               System.out.println(String.valueOf(channel.read(buf))); 
               if (channel.read(buf) < 0) {
-                  System.out.println("run6"); 
+                  System.out.println("run1"); 
                   return;
               }
-              System.out.println("run5"); 
               buf.flip();
-              System.out.println("run7"); 
               String input = charset.decode(buf).toString();
-              System.out.println("run8"); 
               buf.flip();
-              System.out.println("run9"); 
+              System.out.println("run2"); 
               channel.write(buf);
           } catch (IOException e) {
               e.printStackTrace();
@@ -323,28 +216,6 @@ public class Coordinator {
       }
   
   }
-
-/*
-  class EchoThread extends Thread {
-
-    private Socket socket;
-
-    public EchoThread(Socket socket) {
-        this.socket = socket;
-        log.info("%s [%s] :Accepted!\n", "1010", Thread.currentThread().getName());
-    }
-
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        log.info("%s [%s] :Process finished.\n", "1010", Thread.currentThread().getName());
-    }
-  }
-  */
 
 
   public static void main(String[] args) throws Exception {
@@ -383,7 +254,7 @@ public class Coordinator {
     }
     
     Coordinator coo = new Coordinator(config, state, SignatureSourceHelper.signatureSourceFromArgs(config.signatureSource, args));
-    coo.openConnect();  //変更箇所
+    // coo.openConnect();  //変更箇所
     coo.setup();
     coo.start();
   }
